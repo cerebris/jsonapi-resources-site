@@ -1,0 +1,28 @@
+<div class="sidebar">
+    <ul class="main-menu">
+        <%- partial('partials/main_menu', { context: 'sidebar' }) %>
+    </ul>
+    <div class="list">
+        <div id="donate" style="margin-bottom: 20px">
+            <img src="/images/patreon.png">
+            <a href="/sponsor">Sponsor JR</a>
+        </div>
+        <h2>
+            <select class="version-select">
+                <option value="0.8" <%= page.version == '0.8' ? 'selected' : '' %> >0.8</option>
+                <option value="0.9" <%= page.version == '0.9' ? 'selected' : null %> >0.9 beta</option>
+                <option value="0.10" <%= page.version == '0.10' ? 'selected' : null %> >0.10 alpha</option>
+            </select>
+        </h2>
+        <ul class="menu-root">
+            <% version = page.version %>
+            <% search = (version === null ? {type: type} : {type: type, version: version} ) %>
+            <% type !== 'api' && site.pages.find(search).sort('order').each(function (p) { %>
+                <% var fileName = p.path.replace(/^.+?\/([\w-]+)\.html/, '$1') %>
+                <li>
+                    <a href="/<%- p.path %>" class="sidebar-link<%- page.title === p.title ? ' current' : '' %><%- p.is_new ? ' new' : '' %>"><%- p.title %></a>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+</div>

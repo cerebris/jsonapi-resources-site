@@ -1,0 +1,4 @@
+site_description: "JSONAPI::Resources - A resource-focused Rails library for developing JSON API compliant servers."
+google_analytics:
+root_domain: jsonapi-resources.com
+gem_version: 0.8

@@ -1,0 +1,80 @@
+<div class="sidebar">
+  <ul class="main-menu">
+    <%- partial('partials/main_menu', { context: 'sidebar' }) %>
+  </ul>
+</div>
+
+<div id="hero">
+  <div class="inner">
+    <div class="left">
+      <img class="hero-logo" src="/images/logo.png">
+    </div><div class="right">
+      <h2>JSONAPI::Resources</h2>
+      <h1>The Ruby gem for<br/>JSON:API Compliance</h1>
+      <div class="install-command">
+        <span class="code">gem install jsonapi-resources</span>
+      </div>
+      <p>
+        <a class="button" href="/v0.8/guide/">LEARN MORE</a>
+        <a class="button white" href="https://github.com/cerebris/jsonapi-resources" target="_blank">GITHUB</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="highlights">
+  <div class="inner">
+    <div class="point">
+      <h2>JSON API Compliant</h2>
+      <p>Build APIs that are compliant with the <a href="http://jsonapi.org" target="_blank">JSON API</a> specification.
+        Support creating, updating, deleting, and fetching resources and relationships.</p>
+    </div>
+
+    <div class="point">
+      <h2>Configurable</h2>
+      <p>JSONAPI::Resources has options for formatting, pagination, callbacks, caching, sorting, filtering and more.</p>
+    </div>
+
+    <div class="point">
+      <h2>Minimal Coding</h2>
+      <p>A fully functioning API can be created with minimal code, while still allowing for complex requirements.</p>
+    </div>
+
+    <div class="point">
+      <h2>Easy to Override</h2>
+      <p>While there are configuration options for most features, it is also easy to override the code to provide just the behavior you need.</p>
+    </div>
+  </div>
+</div>
+
+<div id="sponsors">
+  <div class="inner">
+    <h3>PROUDLY SPONSORED BY</h3>
+    <%- partial('partials/sponsors') %>
+    <br>
+    <a class="become-sponsor button white" href="/sponsor/">Sponsor Development</a>
+  </div>
+</div>
+
+<div id="footer">
+  <ul class="social-buttons">
+    <li><a href="https://github.com/cerebris/jsonapi-resources" target="_blank">GitHub</a></li>
+    <li><a href="https://gitter.im/cerebris/jsonapi-resources" target="_blank">Gitter</a></li>
+    <li><a href="https://twitter.com/jsonapi_res" target="_blank">Twitter</a></li>
+  </ul>
+  <p>JSONAPI::Resources is released under the <a href="https://opensource.org/licenses/MIT" href="_blank">MIT License</a>.
+  Copyright &copy; <%- new Date().getFullYear() %> <a href="http://www.cerebris.com">Cerebris Corporation</a>.</p>
+</div>
+
+<script>
+var topScrolled = false
+window.addEventListener('scroll', function () {
+  if (window.pageYOffset > 165 && !topScrolled) {
+    topScrolled = true
+    document.getElementById('mobile-bar').classList.remove('top')
+  } else if (window.pageYOffset <= 165 && topScrolled) {
+    topScrolled = false
+    document.getElementById('mobile-bar').classList.add('top')
+  }
+})
+</script>
