@@ -1,10 +1,10 @@
 # Sponsor JSONAPI::Resources
 
-<a href="https://www.patreon.com/jsonapi-resources" target="_blank">
+<a href="https://www.patreon.com/jsonapi_resources" target="_blank">
   <img style="width:120px" src="https://s3.amazonaws.com/patreon_public_assets/toolbox/patreon.png">
 </a>
 
-<p>Sponsor JSONAPI::Resources with a recurring pledge on <a href="https://www.patreon.com/jsonapi-resources" target="_blank">Patreon</a>.</p>
+<p>Sponsor JSONAPI::Resources with a recurring pledge on <a href="https://www.patreon.com/jsonapi_resources" target="_blank">Patreon</a>.</p>
 
 <p>Or send a one-time contribution through **[SquareCash](https://cash.me/$cerebris)** or **[Paypal](https://www.paypal.me/cerebris)**.</p>
 
@@ -24,6 +24,6 @@ Supporting a project of this scope has been very costly for a two person company
 
 Please consider sponsoring JSONAPI::Resources if you are using the project in a revenue generating product. This will help ensure that JR is actively developed, maintained, and supported. In turn, we'll be glad to highlight you as a sponsor of the project on this site.
 
-You can support JSONAPI::Resources with a recurring contribution through **[Patreon](https://www.patreon.com/jsonapi-resources)** or with a one-time contribution through **[SquareCash](https://cash.me/$cerebris)** or **[Paypal](https://www.paypal.me/cerebris)**.
+You can support JSONAPI::Resources with a recurring contribution through **[Patreon](https://www.patreon.com/jsonapi_resources)** or with a one-time contribution through **[SquareCash](https://cash.me/$cerebris)** or **[Paypal](https://www.paypal.me/cerebris)**.
 
 Thanks for your support!
