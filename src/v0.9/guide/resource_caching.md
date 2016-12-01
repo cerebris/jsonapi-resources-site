@@ -25,10 +25,7 @@ See the caveats section below for situations where you might not want to enable 
 The Resource model must also have a field that is updated whenever any of the model's data changes. The default Rails timestamps handle this pretty well, and the default cache key field is `updated_at` for this reason. You can use an alternate field (which you are then responsible for updating) by calling the `cache_field` method:
 
 ```ruby
-class PostResource < JSONAPI::Resource
-  caching
-  cache_field :change_counter
-
+class Post < ActiveRecord::Base
   before_save do
     if self.change_counter.nil?
       self.change_counter = 1
@@ -40,6 +37,11 @@ class PostResource < JSONAPI::Resource
   after_touch do
     update_attribute(:change_counter, self.change_counter + 1)
   end
+end
+
+class PostResource < JSONAPI::Resource
+  caching
+  cache_field :change_counter
 end
 ```
 
