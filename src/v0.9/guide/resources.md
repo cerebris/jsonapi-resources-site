@@ -225,19 +225,19 @@ Here's an example of sorting books by the author name:
 
 ```ruby
 class Book < ActiveRecord::Base
-    belongs_to :author
+  belongs_to :author
 end
 
 class Author < ActiveRecord::Base
-    has_many :books
+  has_many :books
 end
 
 class BookResource < JSONAPI::Resource
   attributes :title, :body
 
   def self.sortable_fields(context)
-    super(context) << :"author.name"
-   end
+    super + [:"author.name"]
+  end
 end
 ```
 The request will look something like:
