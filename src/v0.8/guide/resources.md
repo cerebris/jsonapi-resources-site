@@ -598,7 +598,7 @@ Basic finding by filters is supported by resources. This is implemented in the `
 
 If you need to change the base records on which `find` and `find_by_key` operate, you can override the `records` method on the resource class.
 
-For example to allow a user to only retrieve his own posts you can do the following:
+For example to allow a user to only retrieve their own posts you can do the following:
 
 ```ruby
 class PostResource < JSONAPI::Resource
