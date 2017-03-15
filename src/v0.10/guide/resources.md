@@ -245,6 +245,35 @@ The request will look something like:
 GET /books?include=author&sort=author.name
 ```
 
+JR supports sorting by non-predetermined attribute keys. The `self.sortable_field?` method can be overwritten to validate individual sort fields.
+
+Here's an example of allowing sort fields using a regular expression:
+
+```ruby
+class RandomSortedResource < JSONAPI::Resource
+  RANDOM_SORT_REGEX = /^random(\d+)/
+
+  def self.sortable_field?(field, context)
+    field =~ RANDOM_SORT_REGEX
+  end
+
+  def self.apply_sort(records, order_options, context={})
+    order_options.find do |k,v|
+      key, seed = RANDOM_SORT_REGEX.match(k).to_a
+
+      records = records.random_order(seed) if key
+    end
+
+    records
+  end
+end
+```
+
+The request will look something like:
+```
+GET /books?sort=random42
+```
+
 #### Default sorting
 
 By default JR sorts ascending on the `id` of the primary resource, unless the request specifies an alternate sort order. To override this you may override the `self.default_sort` on a `resource`. `default_sort` should return an array of `sort_param` hashes. A `sort_param` hash contains a `field` and a `direction`, with `direction` being either `:asc` or `:desc`.
