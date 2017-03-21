@@ -20,7 +20,7 @@ class PostResource < JSONAPI::Resource
 end
 ```
 
-See the caveats section below for situations where you might not want to enable caching on particular Resources.
+See the [caveats section below](#Caching-Caveats) for situations where you might not want to enable caching on particular Resources.
 
 The Resource model must also have a field that is updated whenever any of the model's data changes. The default Rails timestamps handle this pretty well, and the default cache key field is `updated_at` for this reason. You can use an alternate field (which you are then responsible for updating) by calling the `cache_field` method:
 
@@ -75,7 +75,7 @@ class PostResource < JSONAPI::Resource
 end
 ```
 
-#### Caching Caveats
+## Caching Caveats
 
 * Models for cached Resources must update a cache key field whenever their data changes. However, if you bypass Rails and e.g. alter the database row directly without changing the `updated_at` field, the cached entry for that resource will be inaccurate. Also, `updated_at` provides a narrow race condition window; if a resource is updated twice in the same second, it's possible that only the first update will be cached. If you're concerned about this, you will need to find a way to make sure your models' cache fields change on every update, e.g. by using a unique random value or a monotonic clock.
 * If an attribute's value is affected by related resources, e.g. the `spoken_languages` example above, then changes to the related resource must also touch the cache field on the resource that uses it. The `belongs_to` relation in ActiveRecord provides a `:touch` option for this purpose.
