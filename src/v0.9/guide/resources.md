@@ -594,6 +594,8 @@ Because filters typically come straight from the request, it's prudent to verify
 
 Basic finding by filters is supported by resources. This is implemented in the `find` and `find_by_key` finder methods. Currently this is implemented for `ActiveRecord` based resources. The finder methods rely on the `records` method to get an `ActiveRecord::Relation` relation. It is therefore possible to override `records` to affect the three find related methods.
 
+**Note**: The use of caching precludes overriding the finder methods. Please see [Caching Caveats](resource_caching.html#Caching-Caveats) for meore details.
+
 #### Customizing base records for finder methods
 
 If you need to change the base records on which `find` and `find_by_key` operate, you can override the `records` method on the resource class.
