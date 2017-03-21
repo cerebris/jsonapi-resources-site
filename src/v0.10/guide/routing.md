@@ -45,6 +45,8 @@ contact_relationships_phone_numbers GET       /contacts/:contact_id/relationship
                             DELETE    /phone-numbers/:id(.:format)                              phone_numbers#destroy
 ```
 
+Like `resources`, you may specify `only:` or `except:`, like `jsonapi_resources :contacts, only: [:create]`.
+
 ### `jsonapi_resource`
 
 Like `jsonapi_resources`, but for resources you lookup without an id.
