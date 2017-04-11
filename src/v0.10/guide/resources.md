@@ -334,6 +334,14 @@ class PersonResource < JSONAPI::Resource
 end
 ```
 
+If caching is enabled on the main resource, then any changes to the flattened resource must also touch the cache field on the main resource. The `belongs_to` relation in ActiveRecord provides a handy `:touch` option for this:
+
+```ruby
+class SpokenLanguage < ActiveRecord::Base
+  belongs_to :person, inverse_of: :spoken_languages, touch: true
+end
+```
+
 ## Primary Key
 
 Resources are always represented using a key of `id`. The resource will interrogate the model to find the primary key. If the underlying model does not use `id` as the primary key _and_ does not support the `primary_key` method you must use the `primary_key` method to tell the resource which field on the model to use as the primary key. **Note:** this _must_ be the actual primary key of the model.

@@ -4,7 +4,9 @@ order: 80
 version: 0.10
 ---
 
-To improve the response time of GET requests, JR can cache the generated JSON fragments for Resources which are suitable. First, set `config.resource_cache` to an ActiveSupport cache store:
+To improve the response time of GET requests, JR can cache the generated JSON fragments for some or all of your Resources, using a [key-based cache expiration](https://signalvnoise.com/posts/3113-how-key-based-cache-expiration-works) system.
+
+To begin, set `config.resource_cache` to an ActiveSupport cache store:
 
 ```ruby
 JSONAPI.configure do |config|
@@ -20,9 +22,15 @@ class PostResource < JSONAPI::Resource
 end
 ```
 
-See the [caveats section below](#Caching-Caveats) for situations where you might not want to enable caching on particular Resources.
+The Post model in this example must have the Rails timestamp field `updated_at`.
 
-The Resource model must also have a field that is updated whenever any of the model's data changes. The default Rails timestamps handle this pretty well, and the default cache key field is `updated_at` for this reason. You can use an alternate field (which you are then responsible for updating) by calling the `cache_field` method:
+See the ["Resources to Not Cache" section below](#Resources-to-Not-Cache) for situations where you might not want to enable caching on particular Resources.
+
+Also, when caching is enabled, please be careful about direct database manipulation. If you alter a database row without changing the `updated_at` field, the cached entry for that resource will be inaccurate.
+
+## Cache Field
+
+Instead of the default `updated_at`, you can use a different field (and take on responsibility for updating it) by calling the `cache_field` method:
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -45,7 +53,58 @@ class PostResource < JSONAPI::Resource
 end
 ```
 
-If context affects the content of the serialized result, you must define a class method `attribute_caching_context` on that Resource, which should return a different value for contexts that produce different results. In particular, if the `meta` or `fetchable_fields` methods, or any method providing the actual content of an attribute, changes depending on context, then you must provide `attribute_caching_context`. The actual value it returns isn't important, what matters is that the value must be different if any relevant part of the context is different.
+One reason to do this is that `updated_at` provides a narrow race condition window. If a resource is updated twice in the same second, it's possible that only the first update will be cached. If you're concerned about this, you will need to find a way to make sure your models' cache fields change on every update, e.g. by using a unique random value or a monotonic clock.
+
+## Cleaning the Cache
+
+JR does **not** actively clean the cache, so you must use an ActiveSupport cache that automatically expires old entries, or you **will** leak resources. The default behavior of Rails' MemoryCache is good, but most other caches will have to be configured with an `:expires_in` option and/or a cache-specific clearing mechanism. In a Redis configuration for example, you will need to set `maxmemory` to a reasonably high size, and set `maxmemory-policy` to `allkeys-lru`.
+
+Also, sometimes you may want to manually clear the cache. If you make a code change that affects serialized representations (i.e. changing the way an attribute is shown), or if you think that there might be invalid cache entries, you can clear the cache by running `JSONAPI.configuration.resource_cache.clear` from the console.
+
+You do not have to manually clear the cache after merely adding or removing attributes on your Resource, because the field list is part of the cache key.
+
+## Side-Effects of Enabling Resource Caching
+
+When `JSONAPI.configuration.resource_cache` is set, JR changes the way it performs ActiveRecord queries on **all** show and index requests, even if a particular request doesn't involve any Resource classes that are cached.
+
+In particular, certain methods you can define on your Resources will not reliably be called by JR operations when caching is enabled:
+
+* Overridden `find`, `find_by_key`, and `records_for` methods will not reliably be called.
+* Custom relationship methods will not reliably be called. For example, if you manually define a `comments` method or `records_for_comments` method on a Resource that `has_many :comments`, do not expect these to be called.
+
+Instead of those, override the `records` class method on Resource; cache lookups will reliably access all records through the scope it returns. In particular, this is the correct way to implement view security; if you want to restrict visibility of a Resource depending on the current context, write a `records` class method for that Resource:
+
+```ruby
+class PostResource < JSONAPI::Resource
+  caching
+
+  attributes :title, :public
+  has_one :owner
+
+  def self.records(options = {})
+    context = options[:context] || {}
+    current_user = context[:current_user]
+
+    if current_user
+      Post.where('public = 1 OR owner_id = ?', current_user.id)
+    else
+      Post.where('public = 1')
+    end
+  end
+end
+```
+
+## Resources to Not Cache
+
+After setting `JSONAPI.configuration.resource_cache`, you may still choose to leave some Resources uncached for various reasons:
+
+* If your Resource is not based on ActiveRecord, e.g. it uses PORO objects or singleton resources or a different ORM/ODM backend. Caching relies on ActiveRecord features.
+* If a Resource's attributes depend on many things outside that Resource, e.g. flattened relationships, but it would be too cumbersome to have all those touch the parent resource on every change.
+* If the content of attributes is affected by context in a way that is too difficult to handle with `attribute_caching_context`, as described below.
+
+## Caching and Context
+
+If context affects the output of any method providing the actual content of an attribute, or the `meta` or `fetchable_fields` methods, then you must provide a class method on your Resource named `attribute_caching_context`. This method should a subset of the context that is (a) serializable and (b) uniquely identifies the caching situation:
 
 ```ruby
 class PostResource < JSONAPI::Resource
@@ -73,18 +132,16 @@ class PostResource < JSONAPI::Resource
     }
   end
 end
+
 ```
 
-## Caching Caveats
+This is necessary because cache lookups do not create instances of your Resource, and therefore cannot call instance methods like `fetchable_fields`. Instead, they have to rely on finding the correct cached representation of the resource, the one generated when these methods were called with the correct context the first time. The attribute caching context is a way to let JR "sub-categorize" your cache by the various parts of your context that affect these instance methods. The same mechanism is also used internally by JR when clients request sparse fieldsets; a cached sparse representation and the cached representation with all attributes don't collide with each other.
 
-* Models for cached Resources must update a cache key field whenever their data changes. However, if you bypass Rails and e.g. alter the database row directly without changing the `updated_at` field, the cached entry for that resource will be inaccurate. Also, `updated_at` provides a narrow race condition window; if a resource is updated twice in the same second, it's possible that only the first update will be cached. If you're concerned about this, you will need to find a way to make sure your models' cache fields change on every update, e.g. by using a unique random value or a monotonic clock.
-* If an attribute's value is affected by related resources, e.g. the `spoken_languages` example above, then changes to the related resource must also touch the cache field on the resource that uses it. The `belongs_to` relation in ActiveRecord provides a `:touch` option for this purpose.
-* JR does not actively clean the cache, so you must use an ActiveSupport cache that automatically expires old entries, or you will leak resources. The MemoryCache built in to Rails does this by default, but other caches will have to be configured with an `:expires_in` option and/or a cache-specific clearing mechanism.
-* Similarly, if you make a substantial code change that affects a lot of serialized representations (i.e. changing the way an attribute is shown), you'll have to clear out all relevant cache entries yourself. The simplest way to do this is to run `JSONAPI.configuration.resource_cache.clear` from the console. You do not have to do this after merely adding or removing attributes; only changes that affect the actual content of attributes require manual cache clearing.
-* If resource caching is enabled at all, then custom relationship methods on any resource might not always be used, even resources that are not cached. For example, if you manually define a `comments` method or `records_for_comments` method on a Resource that `has_many :comments`, you cannot expect it to be used when caching is enabled, even if you never call `caching` on that particular Resource. Instead, you should use relationship name lambdas.
-* The above also applies to custom `find` or `find_by_key` methods. Instead, if you are using resource caching anywhere in your app, try overriding the `find_records` method to return an appropriate `ActiveRecord::Relation`.
-* Caching relies on ActiveRecord features; you cannot enable caching on resources based on non-AR models, e.g. PORO objects or singleton resources.
-* If you write a custom `ResourceSerializer` which takes new options, then you must define `config_description` to include those options if they might impact the serialized value:
+This becomes trickier if you depend on the state of the model, not just on the state of the context. For example, suppose you have a `UserResource#fetchable_fields` that excludes `:email` unless the current user's id matches the resource's id. You would have to put the user's id in the attribute caching context, which means that every client would have their own independent cache of Users. This would be very inefficient, so probably it would be better to just leave UserResource uncached in this case.
+
+## Custom Serializers
+
+If you write a custom `ResourceSerializer` which takes new options, then you must define `config_description` to include those options if they might impact the serialized value:
 
 ```ruby
 class MySerializer < JSONAPI::ResourceSerializer
