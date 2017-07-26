@@ -11,7 +11,7 @@ post = Post.find(1)
 JSONAPI::ResourceSerializer.new(PostResource).serialize_to_hash(PostResource.new(post, nil))
 ```
 
-Note: If your resource needs to access to state from a context hash, make sure to pass the context hash as the second argument of the resource class new method. For example:
+Note: If your resource needs access to state from a `context` hash, make sure to pass the `context` hash as the second argument of the resource class's `new` method. For example:
 
 ```ruby
 post = Post.find(1)

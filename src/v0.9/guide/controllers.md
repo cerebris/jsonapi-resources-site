@@ -70,11 +70,11 @@ end
 
 #### Namespaces
 
-JSONAPI::Resources supports namespacing of controllers and resources. With namespacing you can version your API.
+JSONAPI::Resources supports namespacing of controllers and resources. With namespacing, you can version your API.
 
-If you namespace your controller it will require a namespaced resource.
+If you namespace your controller, it will require a namespaced resource.
 
-In the following example we have a `resource` that isn't namespaced, and one that has now been namespaced. There are slight differences between the two resources, as might be seen in a new version of an API:
+In the following example, we have a `resource` that isn't namespaced, and one that has now been namespaced. There are slight differences between the two resources, as might be seen in a new version of an API:
 
 ```ruby
 class PostResource < JSONAPI::Resource
@@ -195,7 +195,7 @@ end
 
 These codes can be customized in your app by creating an initializer to override any or all of the codes.
 
-In addition textual error codes can be returned by setting the configuration option `use_text_errors = true`. For example:
+In addition, textual error codes can be returned by setting the configuration option `use_text_errors = true`. For example:
 
 ```ruby
 JSONAPI.configure do |config|
@@ -206,7 +206,7 @@ end
 
 #### Handling Exceptions
 
-By default, all exceptions raised downstream from a resource controller will be caught, logged, and a ```500 Internal Server Error``` will be rendered. Exceptions can be whitelisted in the config to pass through the handler and be caught manually, or you can pass a callback from a resource controller to insert logic into the rescue block without interrupting the control flow. This can be particularly useful for additional logging or monitoring without the added work of rendering responses.
+By default, all exceptions raised downstream from a resource controller will be caught, logged, and a `500 Internal Server Error` will be rendered. Exceptions can be whitelisted in the config to pass through the handler and be caught manually, or you can pass a callback from a resource controller to insert logic into the rescue block without interrupting the control flow. This can be particularly useful for additional logging or monitoring without the added work of rendering responses.
 
 Pass a block, refer to controller class methods, or both. Note that methods must be defined as class methods on a controller and accept one parameter, which is passed the exception object that was rescued.
 
