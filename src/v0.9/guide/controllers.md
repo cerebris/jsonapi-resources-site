@@ -206,7 +206,7 @@ end
 
 #### Handling Exceptions
 
-By default, all exceptions raised downstream from a resource controller will be caught, logged, and a ```500 Internal Server Error``` will be rendered. Exceptions can be whitelisted in the config to pass through the handler and be caught manually, or you can pass a callback from a resource controller to insert logic into the rescue block without interrupting the control flow. This can be particularly useful for additional logging or monitoring without the added work of rendering responses.
+By default, all exceptions raised downstream from a resource controller will be caught, logged, and a `500 Internal Server Error` will be rendered. Exceptions can be whitelisted in the config to pass through the handler and be caught manually, or you can pass a callback from a resource controller to insert logic into the rescue block without interrupting the control flow. This can be particularly useful for additional logging or monitoring without the added work of rendering responses.
 
 Pass a block, refer to controller class methods, or both. Note that methods must be defined as class methods on a controller and accept one parameter, which is passed the exception object that was rescued.
 
