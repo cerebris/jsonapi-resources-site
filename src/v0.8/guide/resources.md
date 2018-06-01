@@ -558,6 +558,7 @@ def self.apply_filter(records, filter, value, options)
       end
     else
       super(records, filter, value)
+    end
   end
 end
 ```
@@ -699,6 +700,7 @@ def self.apply_filter(records, filter, value, options)
       end
     else
       super(records, filter, value)
+    end
   end
 end
 ```
@@ -721,9 +723,9 @@ end
 ```
 
 
-#### Override finder methods
+#### Override Finder Methods
 
-Finally if you have more complex requirements for finding you can override the `find` and `find_by_key` methods on the resource class.
+Finally, if you have more complex requirements for finding, you can override the `find` and `find_by_key` methods on the resource class.
 
 Here's an example that defers the `find` operation to a `current_user` set on the `context` option:
 
@@ -752,7 +754,7 @@ Pagination is performed using a `paginator`, which is a class responsible for pa
 
 ### Paginators
 
-`JSONAPI::Resource` supports several pagination methods by default, and allows you to implement a custom system if the defaults do not meet your needs.
+`JSONAPI::Resource` supports several pagination methods by default, and it allows you to implement a custom system if the defaults do not meet your needs.
 
 #### Paged Paginator
 
@@ -1031,7 +1033,7 @@ Callbacks can also be defined for `JSONAPI::Processor` events:
 - `:remove_to_many_relationship`: A `remove_to_many_relationship` operation is being processed.
 - `:remove_to_one_relationship`: A `remove_to_one_relationship` operation is being processed.
 
-See [Operation Processors] (#operation-processors) for details on using OperationProcessors
+See [Operation Processors](operation_processors.html) for details on using OperationProcessors.
 
 ### `JSONAPI::OperationsProcessor` Callbacks (a removed feature)
 

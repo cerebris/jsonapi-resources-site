@@ -4,7 +4,7 @@ order: 40
 version: 0.10
 ---
 
-Operation Processors are called to perform the operation(s) that make up a request. The controller (through the `OperationDispatcher`), creates an `OperatorProcessor` to handle each operation. The processor is created based on the resource name, including the namespace. If a processor does not exist for a resource (namespace matters) the default operation processor is used instead. The default processor can be changed by a configuration setting.
+Operation Processors are called to perform the operation(s) that make up a request. The controller (through the `OperationDispatcher`), creates an `OperatorProcessor` to handle each operation. The processor is created based on the resource name, including the namespace. If a processor does not exist for a resource (namespace matters), the default operation processor is used instead. The default processor can be changed by a configuration setting.
 
 ## Custom OperatorProcessors
 
@@ -20,7 +20,7 @@ class Api::V4::BookProcessor < JSONAPI::Processor
 end
 ```
 
-This simple example uses a callback to update the result's meta property with the total count of records (a redundant feature only for example purposes), if there wasn't an error in the operation.  It is also possible to override the `find` method as well if a different behavior is needed, for example:
+This simple example uses a callback to update the result's meta property with the total count of records (a redundant feature only for example purposes) if there wasn't an error in the operation.  It is also possible to override the `find` method as well if a different behavior is needed, for example:
 
 ```ruby
 class Api::V4::BookProcessor < JSONAPI::Processor

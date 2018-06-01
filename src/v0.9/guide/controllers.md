@@ -70,11 +70,11 @@ end
 
 #### Namespaces
 
-JSONAPI::Resources supports namespacing of controllers and resources. With namespacing you can version your API.
+JSONAPI::Resources supports namespacing of controllers and resources. With namespacing, you can version your API.
 
-If you namespace your controller it will require a namespaced resource.
+If you namespace your controller, it will require a namespaced resource.
 
-In the following example we have a `resource` that isn't namespaced, and one that has now been namespaced. There are slight differences between the two resources, as might be seen in a new version of an API:
+In the following example, we have a `resource` that isn't namespaced, and one that has now been namespaced. There are slight differences between the two resources, as might be seen in a new version of an API:
 
 ```ruby
 class PostResource < JSONAPI::Resource
@@ -195,7 +195,7 @@ end
 
 These codes can be customized in your app by creating an initializer to override any or all of the codes.
 
-In addition textual error codes can be returned by setting the configuration option `use_text_errors = true`. For example:
+In addition, textual error codes can be returned by setting the configuration option `use_text_errors = true`. For example:
 
 ```ruby
 JSONAPI.configure do |config|

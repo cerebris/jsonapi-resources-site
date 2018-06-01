@@ -34,7 +34,7 @@ JSONAPI.configure do |config|
 end
 ```
 
-See [formatters](formatters.html) for more details on formatters.
+See [formatters](formatting.html) for more details on formatters.
 
 ## Defaults
 
