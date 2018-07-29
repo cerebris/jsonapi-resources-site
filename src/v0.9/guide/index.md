@@ -4,8 +4,6 @@ order: 0
 version: 0.9
 ---
 
-**Note:** Version 0.9 is currently in beta.
-
 `JSONAPI::Resources`, or "JR", provides a framework for developing a server that complies with the [JSON API](http://jsonapi.org/) specification.
 
 Like JSON API itself, JR's design is focused on the resources served by an API. JR needs little more than a definition of your resources, including their attributes and relationships, to make your server compliant with JSON API.
