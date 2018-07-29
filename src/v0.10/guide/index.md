@@ -4,7 +4,7 @@ order: 0
 version: 0.10
 ---
 
-**Note: Version 0.10 is Alpha level and should not be considered production ready. Official releases will not be made until the project is feature ready and considered Beta.**
+**Note: Version 0.10 is currently in Beta and should not be considered production ready.**
 
 `JSONAPI::Resources`, or "JR", provides a framework for developing a server that complies with the [JSON API](http://jsonapi.org/) specification.
 
