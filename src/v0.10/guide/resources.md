@@ -468,7 +468,7 @@ The relationship methods (`relationship`, `has_one`, and `has_many`) support the
  * `acts_as_set` - allows the entire set of related records to be replaced in one operation. Defaults to false if not set.
  * `polymorphic` - set to true to identify relationships that are polymorphic.
  * `relation_name` - the name of the relation to use on the model. A lambda may be provided which allows conditional selection of the relation based on the context.
- * `always_include_linkage_data` - if set to true, the relationship includes linkage data. Defaults to false if not set.
+ * `always_include_linkage_data` - if set to true, the serialized relationship will include the type and id of the related record under a `data` key. Defaults to false if not set.
  * `eager_load_on_include` - if set to false, will not include this relationship in join SQL when requested via an include. You usually want to leave this on, but it will break 'relationships' which are not active record, for example if you want to expose a tree using the `ancestry` gem or similar, or the SQL query becomes too large to handle. Defaults to true if not set.
 
 `to_one` relationships support the additional option:
@@ -496,7 +496,9 @@ end
 
 class TagResource < JSONAPI::Resource
   attributes :name
-  has_one :taggable, polymorphic: true
+  # The taggable relationship would be serialized with a data node including
+  # the `type` and `id` of the taggable instance
+  has_one :taggable, polymorphic: true, always_include_linkage_data: true
 end
 ```
 
