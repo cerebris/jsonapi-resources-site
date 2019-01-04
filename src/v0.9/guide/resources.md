@@ -245,6 +245,12 @@ The request will look something like:
 GET /books?include=author&sort=author.name
 ```
 
+By default, a sort will happen in ascending order. In order to sort in descending order, just append a minus sign in front of the variable you are sorting by:
+```
+GET /books?include=author&sort=-author.name
+```
+
+
 #### Default sorting
 
 By default JR sorts ascending on the `id` of the primary resource, unless the request specifies an alternate sort order. To override this you may override the `self.default_sort` on a `resource`. `default_sort` should return an array of `sort_param` hashes. A `sort_param` hash contains a `field` and a `direction`, with `direction` being either `:asc` or `:desc`.
