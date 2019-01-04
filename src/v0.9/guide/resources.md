@@ -758,6 +758,41 @@ class AuthorResource < JSONAPI::Resource
 end
 ```
 
+## Custom Sorting
+
+You can override the `apply_sort` method to gain control over how the sorting is done. This may be useful in case you'd like to base the sorting on variables in your context.
+
+Example:
+
+```ruby
+def self.apply_sort(records, order_options, context = {})
+  if order_options.has_key?('trending')
+    records = records.order_by_trending_scope
+    order_options.delete('trending')
+  end
+
+  super(records, order_options, context)
+end
+```
+
+You can also sort record sets in-memory instead of via Active Record.
+
+Example:
+
+```ruby
+def self.apply_sort(records, order_options, context = {})
+  if order_options.has_key?('trending')
+    records = records.to_a.sort_by { |r| r.considered_trending?(context[:some_query_arg]) }
+    records.reverse! if order_options['trending'] == :desc
+
+    order_options.delete('trending')
+  end
+
+  super(records, order_options, context)
+end
+```
+
+
 ## Pagination
 
 Pagination is performed using a `paginator`, which is a class responsible for parsing the `page` request parameters and applying the pagination logic to the results.
