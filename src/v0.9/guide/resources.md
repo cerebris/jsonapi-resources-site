@@ -311,6 +311,19 @@ class PersonResource < JSONAPI::Resource
 end
 ```
 
+To serialize a flattened relationship as a relationship and not as an attribute, create a getter method that returns an instance of the resource that should be used for serialization.
+
+```ruby
+class PersonResource < JSONAPI::Resource
+  has_one :primary_language, eager_load_on_include: false
+
+  def primary_language
+    language = @model.spoken_languages.find_by(primary: true)
+    LanguageResource.new(language, context) if language
+  end
+end
+```
+
 ## Primary Key
 
 Resources are always represented using a key of `id`. The resource will interrogate the model to find the primary key. If the underlying model does not use `id` as the primary key _and_ does not support the `primary_key` method you must use the `primary_key` method to tell the resource which field on the model to use as the primary key. **Note:** this _must_ be the actual primary key of the model.
