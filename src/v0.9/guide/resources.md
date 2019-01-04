@@ -637,21 +637,58 @@ end
 
 When you create a relationship, a method is created to fetch record(s) for that relationship, using the relation name for the relationship.
 
+
 ```ruby
 class PostResource < JSONAPI::Resource
   has_one :author
   has_many :comments
 
-  # def record_for_author
+  # @see RelationshipBuilder#define_resource_relationship_accessor
+  # @see Processor#show_related_resources
+  # def record_for_author(rel_opts={})
   #   relationship = self.class._relationship(:author)
   #   relation_name = relationship.relation_name(context: @context)
-  #   records_for(relation_name)
+  #   records = records_for(relation_name)
+  #
+  #   resource_klass = relationship.resource_klass
+  #   records = resource_klass.apply_includes(records, rel_opts)
+  #   filters = options.fetch(:filters, {})
+  #   unless filters.nil? || filters.empty?
+  #     records = resource_klass.apply_filters(records, filters, rel_opts)
+  #   end
+  #
+  #   sort_criteria =  rel_opts.fetch(:sort_criteria, {})
+  #   order_options = relationship.resource_klass.construct_order_options(sort_criteria)
+  #   records = resource_klass.apply_sort(records, order_options, @context)
+  #
+  #   paginator = rel_opts[:paginator]
+  #   if paginator
+  #    records = resource_klass.apply_pagination(records, paginator, order_options)
+  #   end
+  #   records  
   # end
 
-  # def records_for_comments
+  # def records_for_comments(rel_opts={})
   #   relationship = self.class._relationship(:comments)
   #   relation_name = relationship.relation_name(context: @context)
-  #   records_for(relation_name)
+  #   records = records_for(relation_name)
+  #
+  #   resource_klass = relationship.resource_klass
+  #   records = resource_klass.apply_includes(records, rel_opts)
+  #   filters = options.fetch(:filters, {})
+  #   unless filters.nil? || filters.empty?
+  #     records = resource_klass.apply_filters(records, filters, rel_opts)
+  #   end
+  #
+  #   sort_criteria =  rel_opts.fetch(:sort_criteria, {})
+  #   order_options = relationship.resource_klass.construct_order_options(sort_criteria)
+  #   records = resource_klass.apply_sort(records, order_options, @context)
+  #
+  #   paginator = rel_opts[:paginator]
+  #   if paginator
+  #    records = resource_klass.apply_pagination(records, paginator, order_options)
+  #   end
+  #   records  
   # end
 end
 
