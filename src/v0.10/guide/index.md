@@ -22,12 +22,15 @@ which *should* be compatible with JSON API compliant server implementations such
 ## Installation
 
 Add JR to your application's `Gemfile`:
-```rub
+```ruby
   # For the latest release production level release
   # gem 'jsonapi-resources'
 
+  # For the latest release preproduction level release (the version covered here)
+  gem 'jsonapi-resources', '~>0.10.0.beta3'
+
   # Use alpha level code at your own risk
-  gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources.git', branch: 'master'
+  # gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources.git', branch: 'master'
 
 ```
 
