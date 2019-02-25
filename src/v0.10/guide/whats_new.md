@@ -14,7 +14,7 @@ be an ongoing activity.**
 
 A new [Upgrade Guide](upgrade_guide.html) has been added to these docs.
 
-## Major fhanges
+## Major changes
 
 ### Resource finders
 
