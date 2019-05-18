@@ -40,6 +40,24 @@ end
 class ContactResource < BaseResource
 end
 ```
+### Singleton Resources
+
+Some resources are singletons and are not accessed publicly by `id`. These should use the `singleton` method to declare the resource as a singleton and provide a `singleton_key` callable to allow the system to find the correct resource, which may be based on the `context`. For example:
+
+```ruby
+class PreferencesResource < JSONAPI::Resource
+  attribute :advanced_mode
+
+  singleton singleton_key: -> (context) {
+    key = context[:current_user].try(:preferences).try(:id)
+    raise JSONAPI::Exceptions::RecordNotFound.new(nil) if key.nil?
+    key
+  }
+
+  has_one :author, :foreign_key_on => :related, class_name: "Person"
+end
+
+```
 
 ### Immutable Resources
 
@@ -452,12 +470,13 @@ The relationship methods (`relationship`, `has_one`, and `has_many`) support the
  * `relation_name` - the name of the relation to use on the model. A lambda may be provided which allows conditional selection of the relation based on the context.
  * `always_include_linkage_data` - if set to true, the serialized relationship will include the type and id of the related record under a `data` key. Defaults to false if not set.
  * `eager_load_on_include` - if set to false, will not include this relationship in join SQL when requested via an include. You usually want to leave this on, but it will break 'relationships' which are not active record, for example if you want to expose a tree using the `ancestry` gem or similar, or the SQL query becomes too large to handle. Defaults to true if not set.
+ * `exclude_links` - accepts either `:default`, `:none`, or and array containing the specific default links to exclude, which may be `:self` and `:related`. Use this to supress warning for links which are not routeable or when you wish to prevent a client from following the links.
 
 `to_one` relationships support the additional option:
  * `foreign_key_on` - defaults to `:self`. To indicate that the foreign key is on the related resource specify `:related`.
 
 `to_many` relationships support the additional option:
- * `reflect` - defaults to `true`. To indicate that updates to the relationship are performed on the related resource, if relationship reflection is turned on. See [Configuration] (#configuration)
+ * `reflect` - defaults to `true`. To indicate that updates to the relationship are performed on the related resource, if relationship reflection is turned on. See [Configuration](#configuration)
 
 Examples:
 
@@ -466,14 +485,14 @@ class CommentResource < JSONAPI::Resource
   attributes :body
   has_one :post
   has_one :author, class_name: 'Person'
-  has_many :tags, acts_as_set: true
+  has_many :tags, acts_as_set: true, exclude_links: :default
 end
 
 class ExpenseEntryResource < JSONAPI::Resource
   attributes :cost, :transaction_date
 
   has_one :currency, class_name: 'Currency', foreign_key: 'currency_code'
-  has_one :employee
+  has_one :employee, exclude_links: [:self]
 end
 
 class TagResource < JSONAPI::Resource
@@ -1003,7 +1022,27 @@ The `meta` method will be called for each resource instance. Override the `meta`
  * `:serializer` -> the serializer instance
  * `:serialization_options` -> the contents of the `serialization_options` method on the controller.
 
-## Custom Links
+## Links
+
+### Default Links
+
+By default resources are serialized with a `self` link. This is generated from the routes. You may wish to supress this prevent link generation warnings if a resource is not routeable, or you do not want clients accessing the resource through the `self` link. The links maybe excluded from serialization by using the `exclude_links` method on the resource definition. This can be provided with either an array of links or the special values `:default` or `:none`. For example:
+
+```ruby
+class CityCouncilMeeting < JSONAPI::Resource
+  attribute :title, :location, :approved
+
+  exclude_links [:self]
+  # OR
+  exclude_links :default
+end
+```
+
+This may be expanded to alow excluding the custom links in the future, but for now only the `self` link is affected.
+
+Links for relationships may be excluded with a [relationship option](#Options).
+
+### Custom Links
 
 Custom links can be included for each resource by overriding the `custom_links` method. If a non empty hash is returned from `custom_links`, it will be merged with the default links hash containing the resource's `self` link. The `custom_links` method is called with the same `options` hash used by for [resource meta information](#resource-meta). The `options` hash contains the following:
 

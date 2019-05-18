@@ -49,7 +49,7 @@ Like `resources`, you may specify `only:` or `except:`, like `jsonapi_resources 
 
 ### `jsonapi_resource`
 
-Like `jsonapi_resources`, but for resources you lookup without an id.
+Like `jsonapi_resources`, but for resources you lookup without an id. Resources used with this route should be marked as `singleton`. See the [Singlelton Resources](resources.html#Singleton-Resources) section for more details.
 
 ## Nested Routes
 
