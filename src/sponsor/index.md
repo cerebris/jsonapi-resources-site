@@ -10,6 +10,8 @@
 
 ## Current premium sponsors:
 
+<a href="https://www.simplepractice.com/" alt="Simple Practice"><img src="/logos/simple_practice-blue@2x.png" style="width: 168px"/></a>
+
 <a href="http://www.cerebris.com" alt="Cerebris"><img src="/logos/cerebris.png" style="width: 110px"/></a>
 
 ## Why sponsor?
