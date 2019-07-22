@@ -52,12 +52,17 @@ JSONAPI.configure do |config|
   config.resource_key_type = :integer
 
   # optional request features
-  config.allow_include = true
+  config.default_allow_include_to_one = true
+  config.default_allow_include_to_many = true
   config.allow_sort = true
   config.allow_filter = true
 
   config.raise_if_parameters_not_allowed = true
 
+  config.warn_on_route_setup_issues = true
+  config.warn_on_missing_routes = true
+  config.warn_on_performance_issues = true
+  
   # :none, :offset, :paged, or a custom paginator name
   config.default_paginator = :none
 
@@ -76,6 +81,14 @@ JSONAPI.configure do |config|
   config.top_level_meta_page_count_key = :page_count
 
   config.use_text_errors = false
+
+  # Whether or not to include exception backtraces in JSONAPI error
+  # responses.  Defaults to `false` in anything other than development or test.
+  config.include_backtraces_in_errors = (Rails.env.development? || Rails.env.test?)
+
+  # Whether or not to include exception application backtraces in JSONAPI error
+  # responses.  Defaults to `false` in anything other than development or test.
+  config.include_application_backtraces_in_errors = (Rails.env.development? || Rails.env.test?)
 
   # List of classes that should not be rescued by the operations processor.
   # For example, if you use Pundit for authorization, you might
@@ -115,6 +128,11 @@ JSONAPI.configure do |config|
   # Set to `nil` (the default) to disable caching, or to `Rails.cache` to use the
   # Rails cache store.
   config.resource_cache = nil
+
+  # Default cache resources
+  # Cache resources by default. Individual resources can be excluded from caching by calling:
+  # `caching false`
+  config.default_caching = false
 
   # Default resource cache field
   # On Resources with caching enabled, this field will be used to check for out-of-date

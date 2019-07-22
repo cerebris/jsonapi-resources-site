@@ -7,7 +7,7 @@ version: 0.10
 ## Upgrading Gemfile
 
 ```ruby
-  gem 'jsonapi-resources', '~>0.10.0.beta3'
+  gem 'jsonapi-resources', '~>0.10.0.beta8'
 
   # Use alpha level code at your own risk
   # gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources.git', branch: 'master'
@@ -37,6 +37,16 @@ be called by JR.
 The `find_records` method has been removed and the functionality has been moved
 to other methods. It's recommended that you use the `apply` callable on filters
 and sorts, and the `apply_join` callable on relationships.
+
+#### `records`
+
+While the `records` method has not been changed some of the overrides that
+were needed for custom app logic may need to be reconsidered. One area in
+particular is joining or including to_many relationships. If this can't be
+avoided it is recommended that a `distinct` call be added to the relation.
+
+The new configuration option `warn_on_performance_issues` is designed to catch
+this state.
 
 #### `records_for`
 
@@ -71,6 +81,6 @@ update these.
 
 *** this will be updated as needed ***
 
-please report issues you encounter upgrading either at
+Please report issues you encounter upgrading either at
 [Gitter](https://gitter.im/cerebris/jsonapi-resources) or
 [Github](https://github.com/cerebris/jsonapi-resources/issues)

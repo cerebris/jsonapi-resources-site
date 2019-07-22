@@ -53,6 +53,17 @@ These are:
 Paths for includes, filters and sorts are now handled by the `Path` and
 `PathSegment` classes.
 
+### Configuration Options
+
+The following new configuration options have been added:
+
+* `default_caching`
+* `default_allow_include_to_one`, replaces deprecated `allow_include`
+* `default_allow_include_to_many`, replaces deprecated `allow_include`
+* `warn_on_route_setup_issues`
+* `warn_on_performance_issues`
+* `include_application_backtraces_in_errors`
+
 ## Breaking changes
 
 ### Sort and filter `apply` callables
@@ -83,3 +94,11 @@ Resources that override the `Resource.apply_includes` method should be aware
 that this is no longer going to be called. This is due to the internal changes
 where related resources are no longer accessed through the model's
 auto-generated association methods for finding resources.
+
+## Deprecations
+
+### `allow_include` configuration option deprecated
+
+The configuration option `allow_include` has been deprecated and replaced with
+the more specific options `default_allow_include_to_one` and
+`default_allow_include_to_many`.
