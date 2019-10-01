@@ -7,7 +7,7 @@ version: 0.10
 ## Upgrading Gemfile
 
 ```ruby
-  gem 'jsonapi-resources', '~>0.10.0.beta8'
+  gem 'jsonapi-resources', '~> 0.10.0'
 
   # Use alpha level code at your own risk
   # gem 'jsonapi-resources', git: 'https://github.com/cerebris/jsonapi-resources.git', branch: 'master'

@@ -18,8 +18,9 @@ which *should* be compatible with JSON API compliant server implementations such
 ## Installation
 
 Add JR to your application's `Gemfile`:
-```rub
-  gem 'jsonapi-resources'
+
+```ruby
+  gem 'jsonapi-resources', '~> 0.9.0'
 ```
 
 And then execute:
