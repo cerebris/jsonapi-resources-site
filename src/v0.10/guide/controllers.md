@@ -22,7 +22,7 @@ Of course you are free to extend this as needed and override action handlers or 
 
 A jsonapi-controller generator is avaliable:
 
-```
+```bash
 rails generate jsonapi:controller contact
 ```
 
@@ -185,6 +185,9 @@ module JSONAPI
   INVALID_FIELD_FORMAT = '119'
   INVALID_FILTERS_SYNTAX = '120'
   SAVE_FAILED = '121'
+  INVALID_DATA_FORMAT = '122'
+  INVALID_RELATIONSHIP = '123'
+  BAD_REQUEST = '400'
   FORBIDDEN = '403'
   RECORD_NOT_FOUND = '404'
   NOT_ACCEPTABLE = '406'
@@ -202,7 +205,6 @@ JSONAPI.configure do |config|
   config.use_text_errors = true
 end
 ```
-
 
 #### Handling Exceptions
 
