@@ -69,8 +69,8 @@ When `JSONAPI.configuration.resource_cache` is set, JR changes the way it perfor
 
 In particular, certain methods you can define on your Resources will not reliably be called by JR operations when caching is enabled:
 
-* Overridden `find`, `find_by_key`, and `records_for` methods will not reliably be called.
-* Custom relationship methods will not reliably be called. For example, if you manually define a `comments` method or `records_for_comments` method on a Resource that `has_many :comments`, do not expect these to be called.
+* Overridden `find` and `find_by_key` methods will not reliably be called.
+* Custom relationship methods will not reliably be called. For example, if you manually define a `comments` method on a Resource that `has_many :comments`, do not expect it to be called.
 
 Instead of those, override the `records` class method on Resource; cache lookups will reliably access all records through the scope it returns. In particular, this is the correct way to implement view security; if you want to restrict visibility of a Resource depending on the current context, write a `records` class method for that Resource:
 
