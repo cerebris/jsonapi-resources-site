@@ -77,6 +77,12 @@ instantiation for cache hits.
 If you have created custom processors or overridden features you will need to
 update these.
 
+### Caching
+
+Prior to release v0.10 JR performed queries slightly differently depending on 
+whether caching was enabled. This is effectively no longer the case, besides 
+the additional requirement to fetch the cache field the queries are the same. 
+
 ### Additional steps
 
 *** this will be updated as needed ***

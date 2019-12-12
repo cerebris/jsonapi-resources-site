@@ -63,37 +63,6 @@ Also, sometimes you may want to manually clear the cache. If you make a code cha
 
 You do not have to manually clear the cache after merely adding or removing attributes on your Resource, because the field list is part of the cache key.
 
-## Side-Effects of Enabling Resource Caching
-
-When `JSONAPI.configuration.resource_cache` is set, JR changes the way it performs ActiveRecord queries on **all** show and index requests, even if a particular request doesn't involve any Resource classes that are cached.
-
-In particular, certain methods you can define on your Resources will not reliably be called by JR operations when caching is enabled:
-
-* Overridden `find`, `find_by_key`, and `records_for` methods will not reliably be called.
-* Custom relationship methods will not reliably be called. For example, if you manually define a `comments` method or `records_for_comments` method on a Resource that `has_many :comments`, do not expect these to be called.
-
-Instead of those, override the `records` class method on Resource; cache lookups will reliably access all records through the scope it returns. In particular, this is the correct way to implement view security; if you want to restrict visibility of a Resource depending on the current context, write a `records` class method for that Resource:
-
-```ruby
-class PostResource < JSONAPI::Resource
-  caching
-
-  attributes :title, :public
-  has_one :owner
-
-  def self.records(options = {})
-    context = options[:context] || {}
-    current_user = context[:current_user]
-
-    if current_user
-      Post.where('public = 1 OR owner_id = ?', current_user.id)
-    else
-      Post.where('public = 1')
-    end
-  end
-end
-```
-
 ## Resources to Not Cache
 
 After setting `JSONAPI.configuration.resource_cache`, you may still choose to leave some Resources uncached for various reasons:

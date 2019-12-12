@@ -292,7 +292,7 @@ class PersonResource < JSONAPI::Resource
 end
 ```
 
-The system will lookup a value formatter named `DateWithTimezoneValueFormatter` and will use this when serializing and updating the attribute. See the [Value Formatters](#value-formatters) section for more details.
+The system will lookup a value formatter named `DateWithTimezoneValueFormatter` and will use this when serializing and updating the attribute. See the [Value Formatters](formatting.html#Value-Formatters) section for more details.
 
 ### Flattening a Rails relationship
 
