@@ -315,7 +315,7 @@ class PersonResource < JSONAPI::Resource
 end
 ```
 
-The system will lookup a value formatter named `DateWithTimezoneValueFormatter` and will use this when serializing and updating the attribute. See the [Value Formatters](#value-formatters) section for more details.
+The system will lookup a value formatter named `DateWithTimezoneValueFormatter` and will use this when serializing and updating the attribute. See the [Value Formatters](formatting.html#Value-Formatters) section for more details.
 
 ### Flattening a Rails relationship
 
@@ -653,8 +653,6 @@ Because filters typically come straight from the request, it's prudent to verify
 
 Basic finding by filters is supported by resources. This is implemented in the `find` and `find_by_key` finder methods. Currently this is implemented for `ActiveRecord` based resources. The finder methods rely on the `records` method to get an `ActiveRecord::Relation` relation. It is therefore possible to override `records` to affect the three find related methods.
 
-**Note**: The use of caching precludes overriding the finder methods. Please see [Caching Caveats](resource_caching.html#Caching-Caveats) for meore details.
-
 #### Customizing base records for finder methods
 
 If you need to change the base records on which `find` and `find_by_key` operate, you can override the `records` method on the resource class.
@@ -672,48 +670,29 @@ class PostResource < JSONAPI::Resource
 end
 ```
 
-When you create a relationship, a method is created to fetch record(s) for that relationship, using the relation name for the relationship.
+#### Customizing relationship joins
+
+If you need to customize how relationships are joined to the primary resource you can do this by providing an `apply_join` callable. This allows you to either augment the default `apply_join` method or perform the join in a completely custom manner. For example here we just want to add an additional where clause to the join:
 
 ```ruby
-class PostResource < JSONAPI::Resource
-  has_one :author
-  has_many :comments
+    class CommentResource < CommentResource
+      has_one :author, class_name: 'Person', apply_join: -> (records, relationship, resource_type, join_type, options) {
+        context = options[:context]
+         
+        records = apply_join(records: records,
+                             relationship: relationship,
+                             resource_type: resource_type,
+                             join_type: join_type,
+                             options: options)
 
-  # def record_for_author
-  #   relationship = self.class._relationship(:author)
-  #   relation_name = relationship.relation_name(context: @context)
-  #   records_for(relation_name)
-  # end
-
-  # def records_for_comments
-  #   relationship = self.class._relationship(:comments)
-  #   relation_name = relationship.relation_name(context: @context)
-  #   records_for(relation_name)
-  # end
-end
-
-```
-
-For example, you may want to raise an error if the user is not authorized to view the related records. See the next section for additional details on raising errors.
-
-```ruby
-class BaseResource < JSONAPI::Resource
-  def records_for(relation_name)
-    context = options[:context]
-    records = _model.public_send(relation_name)
-
-    unless context[:current_user].can_view?(records)
-      raise NotAuthorizedError
+        records.where(author: {special: context.fetch(:special, false)})
+      }
     end
-
-    records
-  end
-end
 ```
 
 #### Raising Errors
 
-Inside the finder methods (like `records_for`) or inside of resource callbacks (like `before_save`) you can `raise` an error to halt processing. JSONAPI::Resources has some built in errors that will return appropriate error codes. By default any other error that you raise will return a `500` status code for a general internal server error.
+Inside the finder methods (like `records`) or inside of resource callbacks (like `before_save`) you can `raise` an error to halt processing. JSONAPI::Resources has some built in errors that will return appropriate error codes. By default any other error that you raise will return a `500` status code for a general internal server error.
 
 To return useful error codes that represent application errors you should set the `exception_class_whitelist` config variable, and then you should use the Rails `rescue_from` macro to render a status code.
 
@@ -736,7 +715,6 @@ class ApiController < ApplicationController
   end
 end
 ```
-
 
 #### Applying Filters
 
@@ -1112,8 +1090,6 @@ Callbacks can also be defined for `JSONAPI::Processor` events:
 - `:replace_to_many_relationship`: A `replace_to_many_relationship` operation is being processed.
 - `:remove_to_many_relationship`: A `remove_to_many_relationship` operation is being processed.
 - `:remove_to_one_relationship`: A `remove_to_one_relationship` operation is being processed.
-
-See [Operation Processors](operation_processors.html) for details on using OperationProcessors.
 
 ### `JSONAPI::OperationsProcessor` Callbacks (a removed feature)
 
