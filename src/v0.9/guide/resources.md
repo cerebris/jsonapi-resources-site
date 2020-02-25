@@ -1038,7 +1038,7 @@ class CityCouncilMeeting < JSONAPI::Resource
 end
 ```
 
-This may be expanded to alow excluding the custom links in the future, but for now only the `self` link is affected.
+This may be expanded to allow excluding the custom links in the future, but for now only the `self` link is affected.
 
 Links for relationships may be excluded with a [relationship option](#Options).
 
