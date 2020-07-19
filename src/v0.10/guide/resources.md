@@ -814,7 +814,9 @@ Accept: application/vnd.api+json
 
 #### Custom Paginators
 
-Custom `paginators` can be used. These should derive from `Paginator`. The `apply` method takes a `relation` and `order_options` and is expected to return a `relation`. The `initialize` method receives the parameters from the `page` request parameters. It is up to the paginator author to parse and validate these parameters.
+Custom `paginators` can be used. These should derive from `Paginator`. By convention, a custom paginator's class name must end with `Paginator`; this allows JR to find the class when configuring the paginator to be used.
+
+The `apply` method takes a `relation` and `order_options` and is expected to return a `relation`. The `initialize` method receives the parameters from the `page` request parameters. It is up to the paginator author to parse and validate these parameters.
 
 For example, here is a very simple single record at a time paginator:
 
@@ -844,6 +846,8 @@ JSONAPI.configure do |config|
   config.maximum_page_size = 20
 end
 ```
+
+Custom paginators can be specified with a symbol for the underscored name of the paginator class, minus the `Paginator` suffix. For example, to use `MyCustomPaginator`, pass `:my_custom`.
 
 If no `default_paginator` is configured, pagination will be disabled by default.
 
