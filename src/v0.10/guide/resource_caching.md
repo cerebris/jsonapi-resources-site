@@ -73,7 +73,7 @@ After setting `JSONAPI.configuration.resource_cache`, you may still choose to le
 
 ## Caching and Context
 
-If context affects the output of any method providing the actual content of an attribute, or the `meta` or `fetchable_fields` methods, then you must provide a class method on your Resource named `attribute_caching_context`. This method should a subset of the context that is (a) serializable and (b) uniquely identifies the caching situation:
+If context affects the output of any method providing the actual content of an attribute, or the `meta` or `fetchable_fields` methods, then you must provide a class method on your Resource named `attribute_caching_context`. This method should be a subset of the context that is (a) serializable and (b) uniquely identifies the caching situation:
 
 ```ruby
 class PostResource < JSONAPI::Resource
