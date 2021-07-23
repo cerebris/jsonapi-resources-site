@@ -489,6 +489,7 @@ The relationship methods (`relationship`, `has_one`, and `has_many`) support the
  * `always_include_linkage_data` - if set to true, the serialized relationship will include the type and id of the related record under a `data` key. Defaults to false if not set.
  * `eager_load_on_include` - if set to false, will not include this relationship in join SQL when requested via an include. You usually want to leave this on, but it will break 'relationships' which are not active record, for example if you want to expose a tree using the `ancestry` gem or similar, or the SQL query becomes too large to handle. Defaults to true if not set.
  * `exclude_links` - accepts either `:default`, `:none`, or and array containing the specific default links to exclude, which may be `:self` and `:related`. Use this to supress warning for links which are not routeable or when you wish to prevent a client from following the links.
+ * `inverse_relationship` - a string/symbol specifying the inverse name of the relationship. In general, this should match the `inverse_of` property of the `ActiveRecord` model. Defaults to `<relation_name>.pluralize` for has_one relationships and `<resource_name>.singuralize` for has_many relationships.
 
 `to_one` relationships support the additional option:
  * `foreign_key_on` - defaults to `:self`. To indicate that the foreign key is on the related resource specify `:related`.
